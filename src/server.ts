@@ -2,7 +2,7 @@ import cors from '@fastify/cors';
 import fastify from 'fastify';
 import { prisma } from './lib/prisma';
 
-import { FastifyRequestBodyProps } from './types';
+import { FastifyRequestProps } from './types';
 
 const app = fastify({ logger: true });
 const port = 5432;
@@ -22,7 +22,7 @@ app.get('/', async () => {
 });
 
 // Get an event by id
-app.get('/events/:id', async (req: FastifyRequestBodyProps) => {
+app.get('/events/:id', async (req: FastifyRequestProps) => {
   const { id } = req.params;
 
   const event = await prisma.event.findUnique({
@@ -33,7 +33,7 @@ app.get('/events/:id', async (req: FastifyRequestBodyProps) => {
 });
 
 // Create a new event
-app.post('/events', async (req: FastifyRequestBodyProps) => {
+app.post('/events', async (req: FastifyRequestProps) => {
   try {
     const { name, date } = req.body;
 
