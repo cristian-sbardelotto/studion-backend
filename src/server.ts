@@ -54,15 +54,39 @@ app.post('/events', async (req: FastifyRequestProps) => {
   }
 });
 
+// Update event by id
+app.put('/events/:id', async (req: FastifyRequestProps) => {
+  try {
+    const { id } = req.params;
+    const { name, date } = req.body;
+
+    const updatedEvent = await prisma.event.update({
+      data: {
+        name,
+        date,
+      },
+      where: { id },
+    });
+
+    return JSON.stringify(updatedEvent);
+  } catch (error) {
+    console.error(`💣💣 ${error}`);
+  }
+});
+
 // Delete event by id
 app.delete('/events/:id', async (req: FastifyRequestProps) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const event = await prisma.event.delete({
-    where: { id },
-  });
+    const event = await prisma.event.delete({
+      where: { id },
+    });
 
-  return JSON.stringify({ event });
+    return JSON.stringify({ event });
+  } catch (error) {
+    console.error(`💣💣 ${error}`);
+  }
 });
 
 app.listen({ port }, () => {
