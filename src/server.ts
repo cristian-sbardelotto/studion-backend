@@ -11,18 +11,33 @@ app.register(cors, {
   origin: true,
 });
 
+const throwError = (res: { statusCode: number }, message: string | unknown) => {
+  res.statusCode = 400;
+  return JSON.stringify({
+    error: {
+      status: res.statusCode,
+      message,
+    },
+  });
+};
+
 // Get all events
-app.get('/', async () => {
+app.get('/', async (req, res) => {
   try {
     const events = await prisma.event.findMany({});
-    return JSON.stringify({ events });
+
+    if (events.length) {
+      return JSON.stringify({ events });
+    }
+
+    return throwError(res, 'You do not have any events registered');
   } catch (error) {
-    console.error(`💣💣 ${error}`);
+    throwError(res, error);
   }
 });
 
 // Get an event by id
-app.get('/events/:id', async (req: FastifyRequestProps) => {
+app.get('/events/:id', async (req: FastifyRequestProps, res) => {
   try {
     const { id } = req.params;
 
@@ -30,16 +45,36 @@ app.get('/events/:id', async (req: FastifyRequestProps) => {
       where: { id },
     });
 
-    return JSON.stringify({ event });
+    if (event) {
+      return JSON.stringify({ event });
+    }
+
+    res.statusCode = 400;
+    return JSON.stringify({
+      error: {
+        status: res.statusCode,
+        message: 'Invalid event id',
+      },
+    });
   } catch (error) {
-    console.error(`💣💣 ${error}`);
+    return throwError(res, error);
   }
 });
 
 // Create a new event
-app.post('/events', async (req: FastifyRequestProps) => {
+app.post('/events', async (req: FastifyRequestProps, res) => {
   try {
     const { name, date } = req.body;
+
+    if (!name) {
+      res.statusCode = 400;
+      return JSON.stringify({
+        error: {
+          status: res.statusCode,
+          message: 'You must inform the name property',
+        },
+      });
+    }
 
     const createdEvent = await prisma.event.create({
       data: {
@@ -48,14 +83,24 @@ app.post('/events', async (req: FastifyRequestProps) => {
       },
     });
 
-    return JSON.stringify(createdEvent);
+    if (createdEvent) {
+      return JSON.stringify(createdEvent);
+    }
+
+    res.statusCode = 400;
+    return JSON.stringify({
+      error: {
+        status: res.statusCode,
+        message: 'Something went wrong with the event creation',
+      },
+    });
   } catch (error) {
-    console.error(`💣💣 ${error}`);
+    return throwError(res, error);
   }
 });
 
 // Update event by id
-app.put('/events/:id', async (req: FastifyRequestProps) => {
+app.put('/events/:id', async (req: FastifyRequestProps, res) => {
   try {
     const { id } = req.params;
     const { name, date } = req.body;
@@ -68,14 +113,18 @@ app.put('/events/:id', async (req: FastifyRequestProps) => {
       where: { id },
     });
 
+    if (!updatedEvent) {
+      console.log('asjdadsoijas');
+    }
+
     return JSON.stringify(updatedEvent);
   } catch (error) {
-    console.error(`💣💣 ${error}`);
+    return throwError(res, error);
   }
 });
 
 // Delete event by id
-app.delete('/events/:id', async (req: FastifyRequestProps) => {
+app.delete('/events/:id', async (req: FastifyRequestProps, res) => {
   try {
     const { id } = req.params;
 
@@ -83,9 +132,19 @@ app.delete('/events/:id', async (req: FastifyRequestProps) => {
       where: { id },
     });
 
-    return JSON.stringify({ event });
+    if (event) {
+      return JSON.stringify({ event });
+    }
+
+    res.statusCode = 400;
+    return JSON.stringify({
+      error: {
+        status: res.statusCode,
+        message: 'Something went wrong with the event exclusion',
+      },
+    });
   } catch (error) {
-    console.error(`💣💣 ${error}`);
+    return throwError(res, error);
   }
 });
 
