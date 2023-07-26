@@ -44,12 +44,13 @@ export const eventsRoutes = async (app: FastifyInstance) => {
   // Create a new event
   app.post('/events', async (req: FastifyRequestProps, res) => {
     try {
-      const { name, date, location, maxParticipants } = req.body;
+      const { name, date, location, maxParticipants, description } = req.body;
 
-      if (!name) {
+      if (!name || !location || !maxParticipants) {
         return throwError({
           res,
-          message: 'You must inform the name property',
+          message:
+            'You must inform the properties name, location and maxParticipants',
         });
       }
 
@@ -59,6 +60,7 @@ export const eventsRoutes = async (app: FastifyInstance) => {
           date,
           location,
           maxParticipants,
+          description,
         },
       });
 
@@ -72,12 +74,15 @@ export const eventsRoutes = async (app: FastifyInstance) => {
   app.put('/events/:id', async (req: FastifyRequestProps, res) => {
     try {
       const { id } = req.params;
-      const { name, date } = req.body;
+      const { name, date, description, location, maxParticipants } = req.body;
 
       const updatedEvent = await prisma.event.update({
         data: {
           name,
           date,
+          description,
+          location,
+          maxParticipants,
         },
         where: { id },
       });
