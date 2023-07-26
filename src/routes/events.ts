@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { prisma } from '../lib/prisma';
 
-import { throwError } from '../functions/throwError';
+import { throwError } from '../utils/throwError';
 
 import { FastifyRequestProps } from '../types';
 
