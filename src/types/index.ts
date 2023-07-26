@@ -8,3 +8,10 @@ export type FastifyRequestProps = FastifyRequest<{
     id: string;
   };
 }>;
+
+export type ThrowErrorProps = {
+  res: {
+    statusCode: number;
+  };
+  message: string | unknown;
+};

@@ -1,22 +1,19 @@
 import { FastifyInstance } from 'fastify';
 import { prisma } from '../lib/prisma';
 
-import { FastifyRequestProps } from '../types';
+import { FastifyRequestProps, ThrowErrorProps } from '../types';
+
+const throwError = ({ res, message }: ThrowErrorProps) => {
+  res.statusCode = 400;
+  return JSON.stringify({
+    error: {
+      status: res.statusCode,
+      message,
+    },
+  });
+};
 
 export const eventsRoutes = async (app: FastifyInstance) => {
-  const throwError = (
-    res: { statusCode: number },
-    message: string | unknown
-  ) => {
-    res.statusCode = 400;
-    return JSON.stringify({
-      error: {
-        status: res.statusCode,
-        message,
-      },
-    });
-  };
-
   // Get all events
   app.get('/', async (req, res) => {
     try {
@@ -26,9 +23,12 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         return JSON.stringify({ events });
       }
 
-      return throwError(res, 'You do not have any events registered');
+      return throwError({
+        res,
+        message: 'You do not have any events registered',
+      });
     } catch (error) {
-      throwError(res, error);
+      throwError({ res, message: error });
     }
   });
 
@@ -45,15 +45,12 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         return JSON.stringify({ event });
       }
 
-      res.statusCode = 400;
-      return JSON.stringify({
-        error: {
-          status: res.statusCode,
-          message: 'Invalid event id',
-        },
+      return throwError({
+        res,
+        message: 'Invalid event id',
       });
     } catch (error) {
-      return throwError(res, error);
+      return throwError({ res, message: error });
     }
   });
 
@@ -63,12 +60,9 @@ export const eventsRoutes = async (app: FastifyInstance) => {
       const { name, date } = req.body;
 
       if (!name) {
-        res.statusCode = 400;
-        return JSON.stringify({
-          error: {
-            status: res.statusCode,
-            message: 'You must inform the name property',
-          },
+        return throwError({
+          res,
+          message: 'You must inform the name property',
         });
       }
 
@@ -83,15 +77,12 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         return JSON.stringify(createdEvent);
       }
 
-      res.statusCode = 400;
-      return JSON.stringify({
-        error: {
-          status: res.statusCode,
-          message: 'Something went wrong with the event creation',
-        },
+      return throwError({
+        res,
+        message: 'Something went wrong with the event creation',
       });
     } catch (error) {
-      return throwError(res, error);
+      return throwError({ res, message: error });
     }
   });
 
@@ -115,7 +106,7 @@ export const eventsRoutes = async (app: FastifyInstance) => {
 
       return JSON.stringify(updatedEvent);
     } catch (error) {
-      return throwError(res, error);
+      return throwError({ res, message: error });
     }
   });
 
@@ -132,15 +123,12 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         return JSON.stringify({ event });
       }
 
-      res.statusCode = 400;
-      return JSON.stringify({
-        error: {
-          status: res.statusCode,
-          message: 'Something went wrong with the event exclusion',
-        },
+      throwError({
+        res,
+        message: 'Something went wrong with the event exclusion',
       });
     } catch (error) {
-      return throwError(res, error);
+      return throwError({ res, message: error });
     }
   });
 };
