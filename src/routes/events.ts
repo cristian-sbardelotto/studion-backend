@@ -44,7 +44,7 @@ export const eventsRoutes = async (app: FastifyInstance) => {
   // Create a new event
   app.post('/events', async (req: FastifyRequestProps, res) => {
     try {
-      const { name, date } = req.body;
+      const { name, date, location, maxParticipants } = req.body;
 
       if (!name) {
         return throwError({
@@ -57,6 +57,8 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         data: {
           name,
           date,
+          location,
+          maxParticipants,
         },
       });
 
