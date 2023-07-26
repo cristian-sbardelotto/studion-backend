@@ -11,16 +11,13 @@ export const eventsRoutes = async (app: FastifyInstance) => {
     try {
       const events = await prisma.event.findMany({});
 
-      if (events.length) {
-        return JSON.stringify({ events });
-      }
+      if (events.length) return JSON.stringify({ events });
 
-      return throwError({
-        res,
+      return JSON.stringify({
         message: 'You do not have any events registered',
       });
     } catch (error) {
-      throwError({ res, message: error });
+      return throwError({ res, message: error });
     }
   });
 
@@ -33,9 +30,7 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         where: { id },
       });
 
-      if (event) {
-        return JSON.stringify({ event });
-      }
+      if (event) return JSON.stringify({ event });
 
       return throwError({
         res,
@@ -65,14 +60,7 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         },
       });
 
-      if (createdEvent) {
-        return JSON.stringify(createdEvent);
-      }
-
-      return throwError({
-        res,
-        message: 'Something went wrong with the event creation',
-      });
+      return JSON.stringify(createdEvent);
     } catch (error) {
       return throwError({ res, message: error });
     }
@@ -92,10 +80,6 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         where: { id },
       });
 
-      if (!updatedEvent) {
-        console.log('asjdadsoijas');
-      }
-
       return JSON.stringify(updatedEvent);
     } catch (error) {
       return throwError({ res, message: error });
@@ -111,14 +95,7 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         where: { id },
       });
 
-      if (event) {
-        return JSON.stringify({ event });
-      }
-
-      throwError({
-        res,
-        message: 'Something went wrong with the event exclusion',
-      });
+      return JSON.stringify({ event });
     } catch (error) {
       return throwError({ res, message: error });
     }
