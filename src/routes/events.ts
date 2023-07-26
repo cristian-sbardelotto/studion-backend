@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { prisma } from '../lib/prisma';
 
-import { throwError } from '../functions/throwError';
+import { throwError } from '../utils/throwError';
 
 import { FastifyRequestProps } from '../types';
 
@@ -11,16 +11,13 @@ export const eventsRoutes = async (app: FastifyInstance) => {
     try {
       const events = await prisma.event.findMany({});
 
-      if (events.length) {
-        return JSON.stringify({ events });
-      }
+      if (events.length) return JSON.stringify({ events });
 
-      return throwError({
-        res,
+      return JSON.stringify({
         message: 'You do not have any events registered',
       });
     } catch (error) {
-      throwError({ res, message: error });
+      return throwError({ res, message: error });
     }
   });
 
@@ -33,9 +30,7 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         where: { id },
       });
 
-      if (event) {
-        return JSON.stringify({ event });
-      }
+      if (event) return JSON.stringify({ event });
 
       return throwError({
         res,
@@ -49,12 +44,13 @@ export const eventsRoutes = async (app: FastifyInstance) => {
   // Create a new event
   app.post('/events', async (req: FastifyRequestProps, res) => {
     try {
-      const { name, date } = req.body;
+      const { name, date, location, maxParticipants, description } = req.body;
 
-      if (!name) {
+      if (!name || !location || !maxParticipants) {
         return throwError({
           res,
-          message: 'You must inform the name property',
+          message:
+            'You must inform the properties name, location and maxParticipants',
         });
       }
 
@@ -62,17 +58,13 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         data: {
           name,
           date,
+          location,
+          maxParticipants,
+          description,
         },
       });
 
-      if (createdEvent) {
-        return JSON.stringify(createdEvent);
-      }
-
-      return throwError({
-        res,
-        message: 'Something went wrong with the event creation',
-      });
+      return JSON.stringify(createdEvent);
     } catch (error) {
       return throwError({ res, message: error });
     }
@@ -82,19 +74,18 @@ export const eventsRoutes = async (app: FastifyInstance) => {
   app.put('/events/:id', async (req: FastifyRequestProps, res) => {
     try {
       const { id } = req.params;
-      const { name, date } = req.body;
+      const { name, date, description, location, maxParticipants } = req.body;
 
       const updatedEvent = await prisma.event.update({
         data: {
           name,
           date,
+          description,
+          location,
+          maxParticipants,
         },
         where: { id },
       });
-
-      if (!updatedEvent) {
-        console.log('asjdadsoijas');
-      }
 
       return JSON.stringify(updatedEvent);
     } catch (error) {
@@ -111,14 +102,7 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         where: { id },
       });
 
-      if (event) {
-        return JSON.stringify({ event });
-      }
-
-      throwError({
-        res,
-        message: 'Something went wrong with the event exclusion',
-      });
+      return JSON.stringify({ event });
     } catch (error) {
       return throwError({ res, message: error });
     }

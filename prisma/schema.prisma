@@ -11,7 +11,10 @@ datasource db {
 }
 
 model Event {
-  id   String   @id @default(uuid())
-  name String
-  date DateTime @default(now())
+  id              String   @id @default(uuid())
+  name            String
+  maxParticipants Int
+  location        String
+  date            DateTime @default(now())
+  description     String   @default("The event has no description provided")
 }
