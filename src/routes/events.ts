@@ -1,17 +1,9 @@
 import { FastifyInstance } from 'fastify';
 import { prisma } from '../lib/prisma';
 
-import { FastifyRequestProps, ThrowErrorProps } from '../types';
+import { throwError } from '../functions/throwError';
 
-const throwError = ({ res, message }: ThrowErrorProps) => {
-  res.statusCode = 400;
-  return JSON.stringify({
-    error: {
-      status: res.statusCode,
-      message,
-    },
-  });
-};
+import { FastifyRequestProps } from '../types';
 
 export const eventsRoutes = async (app: FastifyInstance) => {
   // Get all events
