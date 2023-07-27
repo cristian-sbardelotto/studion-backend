@@ -46,6 +46,19 @@ export const eventsRoutes = async (app: FastifyInstance) => {
     try {
       const { name, date, location, maxParticipants, description } = req.body;
 
+      const repeatedName = await prisma.event.findFirst({
+        where: {
+          name,
+        },
+      });
+
+      if (repeatedName) {
+        return throwError({
+          res,
+          message: 'An event with that name already exists',
+        });
+      }
+
       if (!name || !location || !maxParticipants) {
         return throwError({
           res,
