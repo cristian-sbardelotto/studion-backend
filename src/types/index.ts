@@ -1,9 +1,9 @@
 import { FastifyRequest } from 'fastify';
 
-import { Event } from '@prisma/client';
+import { Event, User } from '@prisma/client';
 
 export type FastifyRequestProps = FastifyRequest<{
-  Body: Event;
+  Body: Event & User;
   Params: {
     id: string;
   };
