@@ -1,9 +1,9 @@
 import { FastifyRequest } from 'fastify';
 
-import { Event } from '@prisma/client';
+import { Event, User } from '@prisma/client';
 
 export type FastifyRequestProps = FastifyRequest<{
-  Body: Event;
+  Body: Event & User;
   Params: {
     id: string;
   };
@@ -11,7 +11,9 @@ export type FastifyRequestProps = FastifyRequest<{
 
 export type ThrowErrorProps = {
   res: {
-    statusCode: number;
+    status: (number: number) => {
+      send: (message: object) => void;
+    };
   };
   message: string | unknown;
 };
