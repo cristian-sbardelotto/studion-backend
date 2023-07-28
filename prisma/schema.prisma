@@ -18,3 +18,9 @@ model Event {
   date            DateTime @default(now())
   description     String   @default("The event has no description provided")
 }
+
+model User {
+  id       String @id @default(uuid())
+  username String @unique
+  password String
+}
