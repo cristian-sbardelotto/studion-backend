@@ -11,7 +11,9 @@ export type FastifyRequestProps = FastifyRequest<{
 
 export type ThrowErrorProps = {
   res: {
-    statusCode: number;
+    status: (number: number) => {
+      send: (message: object) => void;
+    };
   };
   message: string | unknown;
 };
