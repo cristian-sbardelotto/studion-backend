@@ -84,7 +84,10 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         },
       });
 
-      return res.send(createdEvent);
+      return res.send({
+        message: 'Event created successfully.',
+        event: createdEvent,
+      });
     } catch (error) {
       return throwError({ res, message: error });
     }
@@ -109,7 +112,10 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         where: { id },
       });
 
-      return res.send(updatedEvent);
+      return res.send({
+        message: 'Event updated successfully.',
+        event: updatedEvent,
+      });
     } catch (error) {
       return throwError({ res, message: error });
     }
@@ -126,7 +132,7 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         where: { id },
       });
 
-      return res.send({ event });
+      return res.send({ message: 'Event deleted successfully', event });
     } catch (error) {
       return throwError({ res, message: error });
     }
