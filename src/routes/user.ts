@@ -14,7 +14,20 @@ export const userRoutes = async (app: FastifyInstance) => {
       const { username, password } = req.body;
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      // TODO: USER ALREADY EXISTS CHECK
+
+      const userAlreadyExists = await prisma.user.findUnique({
+        where: {
+          username,
+        },
+      });
+
+      if (userAlreadyExists) {
+        return throwError({
+          res,
+          message: 'User already exists. Try another username.',
+        });
+      }
+
       const createdUser = await prisma.user.create({
         data: {
           username,
