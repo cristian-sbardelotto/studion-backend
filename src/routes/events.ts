@@ -4,11 +4,14 @@ import { prisma } from '../lib/prisma';
 import { throwError } from '../utils/throwError';
 
 import { FastifyRequestProps } from '../types';
+import { checkIsUserAuthenticated } from '../utils/checkIsUserAuthenticated';
 
 export const eventsRoutes = async (app: FastifyInstance) => {
   // Get all events
   app.get('/', async (req, res) => {
     try {
+      checkIsUserAuthenticated(req.headers.authorization!, res);
+
       const events = await prisma.event.findMany({});
 
       if (events.length) return res.send({ events });
@@ -24,6 +27,8 @@ export const eventsRoutes = async (app: FastifyInstance) => {
   // Get an event by id
   app.get('/events/:id', async (req: FastifyRequestProps, res) => {
     try {
+      checkIsUserAuthenticated(req.headers.authorization!, res);
+
       const { id } = req.params;
 
       const event = await prisma.event.findUnique({
@@ -44,6 +49,8 @@ export const eventsRoutes = async (app: FastifyInstance) => {
   // Create a new event
   app.post('/events', async (req: FastifyRequestProps, res) => {
     try {
+      checkIsUserAuthenticated(req.headers.authorization!, res);
+
       const { name, date, location, maxParticipants, description } = req.body;
 
       const repeatedName = await prisma.event.findFirst({
@@ -77,7 +84,10 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         },
       });
 
-      return res.send(createdEvent);
+      return res.send({
+        message: 'Event created successfully.',
+        event: createdEvent,
+      });
     } catch (error) {
       return throwError({ res, message: error });
     }
@@ -86,6 +96,8 @@ export const eventsRoutes = async (app: FastifyInstance) => {
   // Update event by id
   app.put('/events/:id', async (req: FastifyRequestProps, res) => {
     try {
+      checkIsUserAuthenticated(req.headers.authorization!, res);
+
       const { id } = req.params;
       const { name, date, description, location, maxParticipants } = req.body;
 
@@ -100,7 +112,10 @@ export const eventsRoutes = async (app: FastifyInstance) => {
         where: { id },
       });
 
-      return res.send(updatedEvent);
+      return res.send({
+        message: 'Event updated successfully.',
+        event: updatedEvent,
+      });
     } catch (error) {
       return throwError({ res, message: error });
     }
@@ -109,13 +124,15 @@ export const eventsRoutes = async (app: FastifyInstance) => {
   // Delete event by id
   app.delete('/events/:id', async (req: FastifyRequestProps, res) => {
     try {
+      checkIsUserAuthenticated(req.headers.authorization!, res);
+
       const { id } = req.params;
 
       const event = await prisma.event.delete({
         where: { id },
       });
 
-      return res.send({ event });
+      return res.send({ message: 'Event deleted successfully', event });
     } catch (error) {
       return throwError({ res, message: error });
     }
