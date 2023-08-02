@@ -20,7 +20,9 @@
 }
 ```
 
-##### @returns - Returns the created user.
+#### @returns - Returns the created user.
+
+---
 
 ### Login on your acccount
 
@@ -44,6 +46,8 @@
 
 #### @returns - Returns the **user token**.
 
+---
+
 ### List all events
 
 ```http
@@ -54,6 +58,8 @@
 
 #### @returns - Returns all the events created.
 
+---
+
 ### List an event by ID
 
 ```http
@@ -63,6 +69,8 @@
 > Your user token is required. Pass the prefix "Bearer" before the token string.
 
 #### @returns - Returns the event details.
+
+---
 
 ### Create an event
 
@@ -94,6 +102,8 @@
 
 #### @returns - Returns the created event.
 
+---
+
 ### Update an event by ID
 
 ```http
@@ -119,6 +129,8 @@
 ```
 
 #### @returns - Returns the updated event.
+
+---
 
 ### Delete an event by ID
 

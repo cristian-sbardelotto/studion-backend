@@ -54,7 +54,7 @@ git clone https://github.com/cristian-sbardelotto/studion-backend
 
 <br />
 
-### Create am=n `.env` file and populate it as the [.env.example file](./.env.example) suggests
+### Create an `.env` file and populate it as the [.env.example file](./.env.example) suggests
 
 <h3>After that, open the project folder and <strong>install the dependencies:</strong></h3>
 
@@ -66,7 +66,7 @@ npm i
 yarn
 ```
 
-<h3>To <strong>run the project</strong> on your browser, use:</h3>
+<h3>To <strong>run the project</strong>, use:</h3>
 
 ```bash
 npm run dev
@@ -105,6 +105,6 @@ Developed with ❤️ by <strong>Cristian Sbardelotto</strong>
 [![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/cristian-k-sbardelotto/)
 [![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/cristian-sbardelotto)
 
-[Check my portfolio](https://bit.ly/portfolioSbardelotto)
+[Portfolio](https://bit.ly/portfolioSbardelotto)
 
 </div>
