@@ -2,7 +2,7 @@
 
 ### Register a new user
 
-```http
+```bash
   POST /register
 ```
 
@@ -26,7 +26,7 @@
 
 ### Login on your acccount
 
-```http
+```bash
   POST /login
 ```
 
@@ -50,7 +50,7 @@
 
 ### List all events
 
-```http
+```bash
   GET /
 ```
 
@@ -62,7 +62,7 @@
 
 ### List an event by ID
 
-```http
+```bash
   GET /events/<event_id_here>
 ```
 
@@ -74,7 +74,7 @@
 
 ### Create an event
 
-```http
+```bash
   POST /events
 ```
 
@@ -106,7 +106,7 @@
 
 ### Update an event by ID
 
-```http
+```bash
   PUT /events/<event_id_here>
 ```
 
@@ -134,7 +134,7 @@
 
 ### Delete an event by ID
 
-```http
+```bash
   DELETE /events/<event_id_here>
 ```
 
