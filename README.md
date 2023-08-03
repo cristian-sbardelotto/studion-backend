@@ -35,7 +35,7 @@ Manage and view events effortlessly. Register, list, and interact with detailed 
 
 <h1 id='learning'>🧠 What I've Learned</h2>
 
-<p>In this website, I worked with:</p>
+<p>In this project, I worked with:</p>
 
 - Backend with Fastify.
 - Utilization of utils folder
